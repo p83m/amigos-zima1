@@ -47,6 +47,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        winter: {
+          sky: "hsl(var(--winter-sky))",
+          snow: "hsl(var(--winter-snow))",
+          ice: "hsl(var(--winter-ice))",
+          mint: "hsl(var(--winter-mint))",
+          lavender: "hsl(var(--winter-lavender))",
+          pink: "hsl(var(--winter-pink))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,10 +88,27 @@ export default {
             height: "0",
           },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        shake: {
+          "0%, 100%": { transform: "rotate(0deg)" },
+          "10%, 30%, 50%, 70%, 90%": { transform: "rotate(-10deg)" },
+          "20%, 40%, 60%, 80%": { transform: "rotate(10deg)" },
+        },
+        pop: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 3s ease-in-out infinite",
+        shake: "shake 0.5s ease-in-out",
+        pop: "pop 0.3s ease-out",
       },
     },
   },

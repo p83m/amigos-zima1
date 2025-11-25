@@ -4,7 +4,13 @@ import { Button } from '@/components/ui/button';
 import { winterWords, getRandomWord, type WinterWord } from '@/data/winterWords';
 import { Sparkles, RotateCw } from 'lucide-react';
 
-const ImageQuiz = () => {
+interface ImageQuizProps {
+  onCorrectAnswer?: () => void;
+  onWrongAnswer?: () => void;
+  onCardClick?: () => void;
+}
+
+const ImageQuiz = ({ onCorrectAnswer, onWrongAnswer, onCardClick }: ImageQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState<WinterWord | null>(null);
   const [options, setOptions] = useState<WinterWord[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -42,12 +48,16 @@ const ImageQuiz = () => {
   const handleAnswerClick = (index: number) => {
     if (selectedAnswer !== null) return; // Już odpowiedziano
     
+    onCardClick?.(); // Dźwięk kliknięcia
     setSelectedAnswer(index);
     const correct = options[index].pl === currentQuestion?.pl;
     setIsCorrect(correct);
     
     if (correct) {
+      onCorrectAnswer?.(); // Dźwięk poprawnej odpowiedzi
       setScore(prev => prev + 1);
+    } else {
+      onWrongAnswer?.(); // Dźwięk błędnej odpowiedzi
     }
     setQuestionsAnswered(prev => prev + 1);
     

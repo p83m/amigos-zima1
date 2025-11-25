@@ -4,7 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getRandomWord, type WinterWord } from '@/data/winterWords';
 import { Dices } from 'lucide-react';
 
-const DiceGame = () => {
+interface DiceGameProps {
+  onDiceRoll?: () => void;
+}
+
+const DiceGame = ({ onDiceRoll }: DiceGameProps) => {
   const [currentWord, setCurrentWord] = useState<WinterWord | null>(null);
   const [isRolling, setIsRolling] = useState(false);
   const [learnedCount, setLearnedCount] = useState(0);
@@ -12,6 +16,7 @@ const DiceGame = () => {
 
   const rollDice = () => {
     setIsRolling(true);
+    onDiceRoll?.(); // Odtwórz dźwięk rzutu kostką
     
     // Animacja trwa 500ms
     setTimeout(() => {

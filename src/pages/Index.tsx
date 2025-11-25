@@ -1,17 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SnowfallBackground from '@/components/SnowfallBackground';
+import SoundToggle from '@/components/SoundToggle';
 import DiceGame from '@/components/games/DiceGame';
 import MatchingGame from '@/components/games/MatchingGame';
 import ImageQuiz from '@/components/games/ImageQuiz';
+import { useSound } from '@/hooks/useSound';
 import { Dices, Puzzle, Image } from 'lucide-react';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dice');
+  const {
+    isSoundEnabled,
+    toggleSound,
+    playCorrect,
+    playWrong,
+    playClick,
+    playDiceRoll,
+    playBackgroundAmbient,
+    stopBackgroundAmbient,
+  } = useSound();
+
+  // Uruchom zimowy ambient przy załadowaniu
+  useEffect(() => {
+    if (isSoundEnabled) {
+      const stopFn = playBackgroundAmbient();
+      return () => {
+        if (stopFn) stopFn();
+        stopBackgroundAmbient();
+      };
+    }
+  }, [isSoundEnabled, playBackgroundAmbient, stopBackgroundAmbient]);
 
   return (
     <>
       <SnowfallBackground />
+      <SoundToggle isSoundEnabled={isSoundEnabled} onToggle={toggleSound} />
       
       <div className="min-h-screen bg-gradient-to-b from-background via-winter-sky to-winter-snow">
         {/* Nagłówek */}
@@ -62,15 +86,23 @@ const Index = () => {
             {/* Zawartość zakładek */}
             <div className="bg-card/30 backdrop-blur-sm rounded-3xl shadow-xl min-h-[500px]">
               <TabsContent value="dice" className="mt-0">
-                <DiceGame />
+                <DiceGame onDiceRoll={playDiceRoll} />
               </TabsContent>
 
               <TabsContent value="matching" className="mt-0">
-                <MatchingGame />
+                <MatchingGame 
+                  onCorrectMatch={playCorrect}
+                  onWrongMatch={playWrong}
+                  onCardClick={playClick}
+                />
               </TabsContent>
 
               <TabsContent value="quiz" className="mt-0">
-                <ImageQuiz />
+                <ImageQuiz 
+                  onCorrectAnswer={playCorrect}
+                  onWrongAnswer={playWrong}
+                  onCardClick={playClick}
+                />
               </TabsContent>
             </div>
           </Tabs>

@@ -3,7 +3,13 @@ import { Card } from '@/components/ui/card';
 import { winterWords, shuffleArray } from '@/data/winterWords';
 import { Check } from 'lucide-react';
 
-const MatchingGame = () => {
+interface MatchingGameProps {
+  onCorrectMatch?: () => void;
+  onWrongMatch?: () => void;
+  onCardClick?: () => void;
+}
+
+const MatchingGame = ({ onCorrectMatch, onWrongMatch, onCardClick }: MatchingGameProps) => {
   const [polishWords, setPolishWords] = useState(shuffleArray([...winterWords]));
   const [spanishWords, setSpanishWords] = useState(shuffleArray([...winterWords]));
   const [selectedPolish, setSelectedPolish] = useState<number | null>(null);
@@ -21,6 +27,7 @@ const MatchingGame = () => {
     // Jeśli para już dopasowana, ignoruj
     if (matchedPairs.has(polishWords[index].pl)) return;
     
+    onCardClick?.(); // Dźwięk kliknięcia
     setSelectedPolish(index);
     
     // Jeśli już wybrano hiszpańskie słowo, sprawdź dopasowanie
@@ -33,6 +40,7 @@ const MatchingGame = () => {
     // Jeśli para już dopasowana, ignoruj
     if (matchedPairs.has(spanishWords[index].pl)) return;
     
+    onCardClick?.(); // Dźwięk kliknięcia
     setSelectedSpanish(index);
     
     // Jeśli już wybrano polskie słowo, sprawdź dopasowanie
@@ -47,6 +55,7 @@ const MatchingGame = () => {
     
     if (polishWord.pl === spanishWord.pl) {
       // Poprawne dopasowanie! 🎉
+      onCorrectMatch?.(); // Odtwórz dźwięk sukcesu
       setTimeout(() => {
         setMatchedPairs(new Set([...matchedPairs, polishWord.pl]));
         setSelectedPolish(null);
@@ -54,6 +63,7 @@ const MatchingGame = () => {
       }, 500);
     } else {
       // Złe dopasowanie 😢
+      onWrongMatch?.(); // Odtwórz dźwięk błędu
       setWrongAnimation(Date.now());
       setTimeout(() => {
         setSelectedPolish(null);
